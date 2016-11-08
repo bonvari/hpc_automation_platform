@@ -3,11 +3,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView
+from django.contrib.messages import add_message, get_messages
 
 from .forms import JobForm
 from .models import Job
 import os
 from . import commands
+from .split_nlogo_experiment import spliter
 
 
 class JobDeleteView(DeleteView):
@@ -19,8 +21,14 @@ def run(request, id):
     data = Job.objects.get(pk=id)
     data.state = True
     #os.system("cat %s" % data.file_first.path)
-    data.result = commands.run_command(data.hostname, data.username, data.password)
-    data.save()
+    try:
+        spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
+        data.result = commands.run_command(data.hostname, data.username, data.password)
+        #data.state = False
+        data.save()
+    except Exception as error:
+        #add_message
+        print("error: invalid nlogo file")
     return redirect('job-list')
 
 
@@ -50,3 +58,8 @@ def upload_job_view(request):
 
 class JobListView(ListView):
     model = Job
+
+    #def get_context_data(self, **kwargs):
+     #   d = super(JobListView, self).get_context_data(**kwargs)
+      #  d.update(errormsg=get_messages())
+

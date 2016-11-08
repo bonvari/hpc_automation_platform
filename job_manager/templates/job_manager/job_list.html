@@ -50,11 +50,11 @@
                                     <td>{{ record.hostname }}</td>
                                     <td style="max-width: 3em">{{ record.add_time }}</td>
                                     <td>{% if record.state %}
-                                        <a class="withIcon start" href="{% url 'run-job' record.id %}"><i
-                                                class="glyphicon glyphicon-play"></i></a>
-                                    {% else %}
                                         <a class="withIcon stop" href="{% url 'stop-job' record.id %}"><i
                                                 class="glyphicon glyphicon-stop"></i></a>
+                                    {% else %}
+                                        <a class="withIcon start" href="{% url 'run-job' record.id %}"><i
+                                                class="glyphicon glyphicon-play"></i></a>
                                     {% endif %}</td>
                                     {#                                <td class="withIcon stop"><a href="{% url 'stop-job' record.id %}"><i class="glyphicon glyphicon-stop"></i></a></td>#}
                                     {#                                <td class="withIcon start"><a href="{% url 'run-job' record.id %}"><i class="glyphicon glyphicon-play"></i></a></td>#}
