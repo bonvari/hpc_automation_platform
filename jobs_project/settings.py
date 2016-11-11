@@ -57,7 +57,7 @@ ROOT_URLCONF = 'jobs_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'job_manager/scripts')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

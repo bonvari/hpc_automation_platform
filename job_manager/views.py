@@ -19,15 +19,17 @@ class JobDeleteView(DeleteView):
 
 def run(request, id):
     data = Job.objects.get(pk=id)
-    data.state = True
     #os.system("cat %s" % data.file_first.path)
     try:
-        spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
-        data.result = commands.run_command(data.hostname, data.username, data.password)
-        #data.state = False
+        data.state = True
+            # spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
+            # data.result = commands.run_command(data.hostname, data.username, data.password)
+            # data.state = False
+        data.result = commands.submit_job(data, data.hostname, data.username, data.password)
         data.save()
     except Exception as error:
         #add_message
+        print(error)
         print("error: invalid nlogo file")
     return redirect('job-list')
 
