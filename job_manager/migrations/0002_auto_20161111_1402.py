@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -11,9 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='job',
-            name='result',
-            field=models.TextField(blank=True),
+            name='owner',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, verbose_name='user', editable=False),
         ),
     ]

@@ -15,10 +15,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
-from job_manager import urls as jobs_url
+from job_manager import urls as job_manager_urls
 from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include(jobs_url)),
+    url(r'^', include(job_manager_urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
