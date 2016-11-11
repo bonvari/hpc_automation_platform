@@ -15,3 +15,4 @@ class Job(models.Model):
     add_time = models.DateTimeField(auto_now_add=True)
     result = models.TextField(blank=True)
     state = models.BooleanField(default=False)
+    latest_run = models.IntegerField(default=1)
