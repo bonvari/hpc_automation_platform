@@ -20,6 +20,12 @@ class ClusterAccountListView(ListView):
         return ClusterAccount.objects.filter(user=self.request.user)
 
 
+class JobListView(ListView):
+    model = Job
+
+    def get_queryset(self):
+        return Job.objects.filter(owner=self.request.user)
+
 
 
 # class JobListView(ListView):

@@ -1,22 +1,12 @@
-<!DOCTYPE html>
-{% load bootstrap %}
-{% load staticfiles %}
+{% extends 'base.html' %}
 
-<html>
-<head lang="en">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <meta charset="UTF-8">
-    <title></title>
-
-</head>
-<body style="padding-top:60px">
-
-<div class="container">
-    <div class="row">
-        <td><a href="{% url 'job-upload' %}">
-            <button type="button" class="btn btn-success">Upload Files <span
+{% block body %}
+<div class="row">
+        <td><a href="{% url 'cluster-list' %}">
+            <button type="button" class="btn btn-success">Manage Clusters</button>
+        </a></td>
+        <td><a href="{% url 'job-list' %}">
+            <button type="button" class="btn btn-success">Add Job <span
                     class="glyphicon glyphicon-plus"></span></button>
         </a></td>
         <br><br><br>
@@ -32,55 +22,44 @@
                         <table class="table table-striped ">
                             <tr>
                                 <th style="max-width: 32em">Number</th>
-                                <th>JobID</th>
-                                <th>User</th>
-                                <th>Cluster</th>
-                                <th>Date</th>
-                                <th>State</th>
-                                <th>Refresh</th>
-                                <th>Delete</th>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Owner</th>
+                                <th>Model File</th>
+                                <th>Experiment File</th>
+                                <th>Add Date</th>
+                                <th></th>
+                                <th></th>
                             </tr>
 
-                            {% for record in object_list %}
+                            {% for job in object_list %}
 
                                 <tr>
                                     <td> {{ forloop.counter }} </td>
-                                    <td>{{ record.id }}</td>
-                                    <td>{{ record.username }}</td>
-                                    <td>{{ record.hostname }}</td>
-                                    <td style="max-width: 3em">{{ record.add_time }}</td>
-                                    <td>{% if record.state %}
-                                        <a class="withIcon stop" href="{% url 'stop-job' record.id %}"><i
-                                                class="glyphicon glyphicon-stop"></i></a>
-                                    {% else %}
-                                        <a class="withIcon start" href="{% url 'run-job' record.id %}"><i
-                                                class="glyphicon glyphicon-play"></i></a>
-                                    {% endif %}</td>
-                                    {#                                <td class="withIcon stop"><a href="{% url 'stop-job' record.id %}"><i class="glyphicon glyphicon-stop"></i></a></td>#}
-                                    {#                                <td class="withIcon start"><a href="{% url 'run-job' record.id %}"><i class="glyphicon glyphicon-play"></i></a></td>#}
-                                    <td class="withIcon refresh"><a href="#"><i
-                                            class="glyphicon glyphicon-refresh"></i></a></td>
-
-                                    <td class="Icon delete"><a href="{% url 'del-job' record.id %}"><i
-                                            class="glyphicon glyphicon-trash"></i></a></td>
-
-                                </tr>
-
-                            {% comment %}
-                                <tr><td colspan="5"> <div style="text-align:left"> {{ record.result|linebreaks }}</div> </td></tr>
-                            {% endcomment %}
+                                    <td>{{ job.id }}</td>
+                                    <td>{{ job.title }}</td>
+                                    <td>{{ job.owner }}</td>
+                                    <td>{{ job.model_file }}</td>
+                                    <td>{{ job.experiment_file }}</td>
+                                    <td>{{ job.add_date }}</td>
+                                    <td><a href="{% url 'job-list' %}">
+                                        <button type="button" class="btn btn-success"><span
+                                                class="glyphicon glyphicon-edit"></span></button>
+                                    </a></td>
+                                    <td><a href="{% url 'job-list' %}">
+                                        <button type="button" class="btn btn-danger"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                    </a></td>
                             {% endfor %}
 
                         </table>
                     {% else %}
                         <div class="alert alert-info">
-                            <strong>No job!</strong> for add a job use 'Upload Files' buttom.
+                            <strong>No Job!</strong> to add a job use 'Add Job' buttom.
                         </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

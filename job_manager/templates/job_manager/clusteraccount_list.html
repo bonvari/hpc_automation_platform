@@ -2,16 +2,19 @@
 
 {% block body %}
 <div class="row">
-{#        <td><a href="{% url 'job-upload' %}">#}
-{#            <button type="button" class="btn btn-success">Upload Files <span#}
-{#                    class="glyphicon glyphicon-plus"></span></button>#}
-{#        </a></td>#}
+         <td><a href="{% url 'job-list' %}">
+            <button type="button" class="btn btn-success">Manage Jobs</button>
+        </a></td>
+        <td><a href="{% url 'cluster-list' %}">
+            <button type="button" class="btn btn-success">Add Cluster <span
+                    class="glyphicon glyphicon-plus"></span></button>
+        </a></td>
         <br><br><br>
 
         <div class="panel panel-default">
 
             <div class="panel-heading">
-                <h3 class="panel-title">Jobs List</h3>
+                <h3 class="panel-title">Clusters List</h3>
             </div>
             <div class="panel-body">
                 <div class="col-lg-12 table-responsive">
@@ -19,49 +22,40 @@
                         <table class="table table-striped ">
                             <tr>
                                 <th style="max-width: 32em">Number</th>
-                                <th>JobID</th>
+                                <th>ID</th>
+                                <th>Title</th>
                                 <th>User</th>
-                                <th>Cluster</th>
-                                <th>Date</th>
-                                <th>State</th>
-                                <th>Refresh</th>
-                                <th>Delete</th>
+                                <th>Host</th>
+                                <th>Username</th>
+                                <th>Description</th>
+                                <th></th>
+                                <th></th>
                             </tr>
 
-                            {% for record in object_list %}
+                            {% for cluster in object_list %}
 
                                 <tr>
                                     <td> {{ forloop.counter }} </td>
-                                    <td>{{ record.id }}</td>
-                                    <td>{{ record.username }}</td>
-                                    <td>{{ record.hostname }}</td>
-                                    <td style="max-width: 3em">{{ record.add_time }}</td>
-{#                                    <td>{% if record.state %}#}
-{#                                        <a class="withIcon stop" href="{% url 'stop-job' record.id %}"><i#}
-{#                                                class="glyphicon glyphicon-stop"></i></a>#}
-{#                                    {% else %}#}
-{#                                        <a class="withIcon start" href="{% url 'run-job' record.id %}"><i#}
-{#                                                class="glyphicon glyphicon-play"></i></a>#}
-{#                                    {% endif %}</td>#}
-                                    {#                                <td class="withIcon stop"><a href="{% url 'stop-job' record.id %}"><i class="glyphicon glyphicon-stop"></i></a></td>#}
-                                    {#                                <td class="withIcon start"><a href="{% url 'run-job' record.id %}"><i class="glyphicon glyphicon-play"></i></a></td>#}
-{#                                    <td class="withIcon refresh"><a href="#"><i#}
-{#                                            class="glyphicon glyphicon-refresh"></i></a></td>#}
-{##}
-{#                                    <td class="Icon delete"><a href="{% url 'del-job' record.id %}"><i#}
-{#                                            class="glyphicon glyphicon-trash"></i></a></td>#}
-
-                                </tr>
-
-                            {% comment %}
-                                <tr><td colspan="5"> <div style="text-align:left"> {{ record.result|linebreaks }}</div> </td></tr>
-                            {% endcomment %}
+                                    <td>{{ cluster.id }}</td>
+                                    <td>{{ cluster.title }}</td>
+                                    <td>{{ cluster.user }}</td>
+                                    <td>{{ cluster.host }}</td>
+                                    <td>{{ cluster.username }}</td>
+                                    <td>{{ cluster.description|truncatewords:10 }}</td>
+                                    <td><a href="{% url 'cluster-list' %}">
+                                        <button type="button" class="btn btn-success"><span
+                                                class="glyphicon glyphicon-edit"></span></button>
+                                    </a></td>
+                                    <td><a href="{% url 'cluster-list' %}">
+                                        <button type="button" class="btn btn-danger"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                    </a></td>
                             {% endfor %}
 
                         </table>
                     {% else %}
                         <div class="alert alert-info">
-                            <strong>No job!</strong> for add a job use 'Upload Files' buttom.
+                            <strong>No Cluster!</strong> to add a cluster use 'Add Cluster' buttom.
                         </div>
                     {% endif %}
                 </div>
