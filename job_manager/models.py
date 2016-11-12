@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 
 class Job(models.Model):
-    file_first = models.FileField(upload_to='uploads/%Y_%m_%d/')
-    file_second = models.FileField(upload_to='uploads/%Y_%m_%d/')
+    file_first = models.FileField(upload_to='uploads/%Y_%m_%d/', verbose_name='Model')
+    file_second = models.FileField(upload_to='uploads/%Y_%m_%d/', verbose_name='Experiment')
     file_third = models.FileField(upload_to='uploads/%Y_%m_%d/', blank=True)
     file_forth = models.FileField(upload_to='uploads/%Y_%m_%d/', blank=True)
     email = models.EmailField()
