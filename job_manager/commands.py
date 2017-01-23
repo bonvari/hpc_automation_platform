@@ -35,6 +35,10 @@ def run_command(hostname, username, password):
 
 def submit_job(job, hostname, username, password):
     try:
+        xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments')
+        os.mkdir(xml_dir)
+        os.system('split_nlogo_experiment %s %s --output_dir %s' % (job.file_first.path, job.experiment_name, xml_dir))
+
         netlogo_dir = '/home/%s/netlogo-sge' % username
         # datetime.datetime.now().strftime('%Y-%m-%d')
         run_dir = os.path.join(netlogo_dir, 'job-%s' % job.id, '%d' % job.latest_run)
@@ -50,11 +54,24 @@ def submit_job(job, hostname, username, password):
         # cd to run directory
         s.sendline('cd %s' % run_dir)
 
+        #copy experiment files to server
+        for experiment_filename in os.listdir(xml_dir):
+            file_path = os.path.join(xml_dir, experiment_filename)
+            destination_path = os.path.join(run_dir, experiment_filename)
+            copy_file(file_path, destination_path, hostname, username, password)
+
+        experiments_count = len(os.listdir(xml_dir))
+
         # create output dir
         s.sendline('mkdir -p %s' % output_dir)
 
         # copy job submit script
-        job_submit_script = get_script('job-submit.sh')
+        # copy sge script
+        context_dict = {
+            'experiment_name': job.experiment_name,
+            'experiment_count': experiments_count
+        }
+        job_submit_script = get_script('job-submit.sh', context_dict)
         copy_script(s, job_submit_script, 'job-submit.sh')
         s.sendline('chmod +x job-submit.sh')
 

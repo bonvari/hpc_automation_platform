@@ -1,6 +1,6 @@
 {% autoescape off %}
-for ((i=1;i<=10;i++))
+for ((i=0;i<{{experiment_count}};i++))
 do
-qsub sge-script.sh $1
+qsub sge-script.sh "{{experiment_name}}$i.xml"
 done
 {% endautoescape %}
