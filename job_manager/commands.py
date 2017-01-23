@@ -35,9 +35,13 @@ def run_command(hostname, username, password):
 
 def submit_job(job, hostname, username, password):
     try:
-        xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments')
-        os.mkdir(xml_dir)
-        os.system('split_nlogo_experiment %s %s --output_dir %s' % (job.file_first.path, job.experiment_name, xml_dir))
+
+        try:
+            xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments')
+            os.mkdir(xml_dir)
+            os.system('split_nlogo_experiment %s %s --output_dir %s' % (job.file_first.path, job.experiment_name, xml_dir))
+        except:
+            print('Split failed')
 
         netlogo_dir = '/home/%s/netlogo-sge' % username
         # datetime.datetime.now().strftime('%Y-%m-%d')
@@ -70,7 +74,7 @@ def submit_job(job, hostname, username, password):
         # copy sge script
         context_dict = {
             'experiment_name': job.experiment_name,
-            'experiment_count': experiments_count
+            'experiment_count': experiments_count,
         }
         job_submit_script = get_script('job-submit.sh', context_dict)
         copy_script(s, job_submit_script, 'job-submit.sh')
@@ -91,7 +95,8 @@ def submit_job(job, hostname, username, password):
         context_dict = {
             'model_file': model_filepath,
             'experiment_file': experiment_filepath,
-            'output_dir': output_dir
+            'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
+            'output_dir': output_dir,
         }
         run_simulator_script = get_script('run-simulator.sh', context_dict)
         copy_script(s, run_simulator_script, 'run-simulator.sh')
@@ -105,11 +110,6 @@ def submit_job(job, hostname, username, password):
 
         #s.sendline('split_nlogo_experiment "%s" %s' % (model_filepath, job.experiment_name))
         #s.sendline('ls|grep %s|wc -l' % job.experiment_name)
-
-        # copy job submit script
-        job_submit_script = get_script('job-submit.sh')
-        copy_script(s, job_submit_script, 'job-submit.sh')
-        s.sendline('chmod +x job-submit.sh')
 
         s.sendline('source ./job-submit.sh')
         s.logout()
@@ -155,6 +155,9 @@ def copy_file(local_filepath, remote_filepath, hostname, username, password):
 
 
 def copy_script(connection, script, filename):
+
     connection.sendline("echo '#!/usr/bin/env bash' >> %s" % filename)
     for line in script.split('\n'):
+        # if '$dollar' in line:
+        #     parts = line.split()
         connection.sendline('echo "%s" >> %s' % (line, filename))
