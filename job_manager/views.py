@@ -22,7 +22,7 @@ def run(request, id):
     #os.system("cat %s" % data.file_first.path)
     try:
         data.state = True
-            # spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
+            #spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
             # data.result = commands.run_command(data.hostname, data.username, data.password)
             # data.state = False
         data.result = commands.submit_job(data, data.hostname, data.username, data.password)

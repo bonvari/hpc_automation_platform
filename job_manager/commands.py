@@ -35,6 +35,12 @@ def run_command(hostname, username, password):
 
 def submit_job(job, hostname, username, password):
     try:
+
+        xml_dir = os.path.join(os.path.dirname(job.file_first), 'experiments')
+        os.mkdir(xml_dir)
+        #os.system()
+
+
         netlogo_dir = '/home/%s/netlogo-sge' % username
         # datetime.datetime.now().strftime('%Y-%m-%d')
         run_dir = os.path.join(netlogo_dir, 'job-%s' % job.id, '%d' % job.latest_run)
@@ -44,6 +50,7 @@ def submit_job(job, hostname, username, password):
 
         s = pxssh.pxssh()
         # login to master node
+
         s.login(hostname, username, password)
         # create the job's new run directory
         s.sendline('mkdir -p %s' % run_dir)
@@ -53,10 +60,7 @@ def submit_job(job, hostname, username, password):
         # create output dir
         s.sendline('mkdir -p %s' % output_dir)
 
-        # copy job submit script
-        job_submit_script = get_script('job-submit.sh')
-        copy_script(s, job_submit_script, 'job-submit.sh')
-        s.sendline('chmod +x job-submit.sh')
+
 
         # copy sge script
         context_dict = {
@@ -82,6 +86,16 @@ def submit_job(job, hostname, username, password):
         copy_file(job.file_first.path, model_filepath, hostname, username, password)
 
         copy_file(job.file_second.path, experiment_filepath, hostname, username, password)
+
+        # split before running the main script
+
+        #s.sendline('split_nlogo_experiment "%s" %s' % (model_filepath, job.experiment_name))
+        #s.sendline('ls|grep %s|wc -l' % job.experiment_name)
+
+        # copy job submit script
+        job_submit_script = get_script('job-submit.sh')
+        copy_script(s, job_submit_script, 'job-submit.sh')
+        s.sendline('chmod +x job-submit.sh')
 
         s.sendline('source ./job-submit.sh')
         s.logout()
