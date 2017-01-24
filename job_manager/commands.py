@@ -33,7 +33,7 @@ def run_command(hostname, username, password):
         return 'pxssh failed \r \n %s' + str(e)
 
 
-def submit_job(job, hostname, username, password):
+def submit_job(job, hostname, username, password,thread_count):
     try:
 
         try:
@@ -76,7 +76,16 @@ def submit_job(job, hostname, username, password):
             'experiment_name': job.experiment_name,
             'experiment_count': experiments_count,
         }
-        job_submit_script = get_script('job-submit.sh', context_dict)
+
+        if experiments_count<10:
+            job_submit_script = get_script('job-submit.sh', context_dict)
+        elif experiments_count<100:
+            job_submit_script = get_script('job-submit0010.sh', context_dict)
+        elif experiments_count<1000:
+            job_submit_script = get_script('job-submit0100.sh', context_dict)
+        else:
+            job_submit_script = get_script('job-submit1000.sh', context_dict)
+
         copy_script(s, job_submit_script, 'job-submit.sh')
         s.sendline('chmod +x job-submit.sh')
 
@@ -97,6 +106,7 @@ def submit_job(job, hostname, username, password):
             'experiment_file': experiment_filepath,
             'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
             'output_dir': output_dir,
+            'thread_count': thread_count,
         }
         run_simulator_script = get_script('run-simulator.sh', context_dict)
         copy_script(s, run_simulator_script, 'run-simulator.sh')
@@ -161,3 +171,20 @@ def copy_script(connection, script, filename):
         # if '$dollar' in line:
         #     parts = line.split()
         connection.sendline('echo "%s" >> %s' % (line, filename))
+
+def stop_job(job, hostname, username, password):
+    try:
+
+        s = pxssh.pxssh()
+        # login to master node
+
+        s.login(hostname, username, password)
+        # send killall command
+        s.sendline('/opt/c3-4/cexec :1-19 killall -u %s' % username)
+        s.logout()
+
+        return 'Successfully stop the job'
+    except pxssh.ExceptionPxssh as e:
+        print("pxssh failed on login.")
+        print(str(e))
+        return 'pxssh failed \r \n %s' + str(e)

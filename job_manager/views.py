@@ -25,7 +25,7 @@ def run(request, id):
             #spliter(data.file_first.path, "experiment1", os.path.dirname(data.file_first.path))
             # data.result = commands.run_command(data.hostname, data.username, data.password)
             # data.state = False
-        data.result = commands.submit_job(data, data.hostname, data.username, data.password)
+        data.result = commands.submit_job(data, data.hostname, data.username, data.password, data.thread_count)
         data.save()
     except Exception as error:
         #add_message
