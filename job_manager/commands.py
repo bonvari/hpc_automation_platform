@@ -39,11 +39,12 @@ def submit_job(job, hostname, username, password,thread_count):
         try:
             xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments')
             os.mkdir(xml_dir)
+            os.system("pwd")
             os.system('split_nlogo_experiment %s %s --output_dir %s' % (job.file_first.path, job.experiment_name, xml_dir))
         except:
             print('Split failed')
 
-        netlogo_dir = '/home/%s/netlogo-sge' % username
+        netlogo_dir = '/home/%s/netlogo-sge2' % username
         # datetime.datetime.now().strftime('%Y-%m-%d')
         run_dir = os.path.join(netlogo_dir, 'job-%s' % job.id, '%d' % job.latest_run)
         output_dir = os.path.join(run_dir, 'output')
@@ -97,8 +98,8 @@ def submit_job(job, hostname, username, password,thread_count):
             'simulator_src_dir': run_dir
         }
         sge_script = get_script('sge-script.sh', context_dict)
-        copy_script(s, sge_script, 'sge-script.sh')
-        s.sendline('chmod +x sge-script.sh')
+        copy_script(s, sge_script, 'sge-script2.sh')
+        s.sendline('chmod +x sge-script2.sh')
 
         # copy run simulator script
         context_dict = {
