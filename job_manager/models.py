@@ -9,7 +9,7 @@ class Job(models.Model):
     file_third = models.FileField(upload_to='uploads/%Y_%m_%d/', blank=True)
     file_forth = models.FileField(upload_to='uploads/%Y_%m_%d/', blank=True)
     experiment_name = models.CharField(max_length=100)
-    thread_count= models.CharField(max_length=10)
+    model_name = models.CharField(max_length=10)
     email = models.EmailField()
     hostname = models.CharField(max_length=100, default='aoclsb.uab.cat')
     username = models.CharField(max_length=100)

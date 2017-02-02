@@ -7,7 +7,7 @@ from pexpect import pxssh
 
 from django.template import Context, Template
 
-
+# this is dummy and does not do anything anymore in the code
 def run_command(hostname, username, password):
     try:                                                            
         result = ''
@@ -33,19 +33,23 @@ def run_command(hostname, username, password):
         return 'pxssh failed \r \n %s' + str(e)
 
 
-def submit_job(job, hostname, username, password,thread_count):
+#executed when clicking the play button, the parameters are what passed from the interface to this function
+def submit_job(job, hostname, username, password,model_name):
     try:
 
         try:
-            xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments')
+            #making a directory for splitted experiments, it is current directory/experiments
+            xml_dir = os.path.join(os.path.dirname(job.file_first.path), 'experiments-%d-%d' % (job.id , job.latest_run))
             os.mkdir(xml_dir)
-            os.system("pwd")
+            #splitting the model using command line and piutting the result in xml_dir = current /experiments
             os.system('split_nlogo_experiment %s %s --output_dir %s' % (job.file_first.path, job.experiment_name, xml_dir))
         except:
             print('Split failed')
 
-        netlogo_dir = '/home/%s/netlogo-sge2' % username
-        # datetime.datetime.now().strftime('%Y-%m-%d')
+        #setting server (cluster master node) key directories
+        #setting main director, e.g.y: /home/gtashakor/netlogo-sge
+        netlogo_dir = '/home/%s/netlogo-sge' % username
+        # setting job-# directory and run, e.g. job-2/1
         run_dir = os.path.join(netlogo_dir, 'job-%s' % job.id, '%d' % job.latest_run)
         output_dir = os.path.join(run_dir, 'output')
         model_filepath = os.path.join(run_dir, os.path.split(job.file_first.path)[1])
@@ -95,9 +99,11 @@ def submit_job(job, hostname, username, password,thread_count):
             'work_dir': run_dir,
             'simulator_dir': run_dir,
             'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
-            'simulator_src_dir': run_dir
+            'simulator_src_dir': run_dir,
+            'output_dir': output_dir,
+            'model_name': model_name,
         }
-        sge_script = get_script('sge-script.sh', context_dict)
+        sge_script = get_script('sge-script2.sh', context_dict)
         copy_script(s, sge_script, 'sge-script2.sh')
         s.sendline('chmod +x sge-script2.sh')
 
@@ -107,7 +113,6 @@ def submit_job(job, hostname, username, password,thread_count):
             'experiment_file': experiment_filepath,
             'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
             'output_dir': output_dir,
-            'thread_count': thread_count,
         }
         run_simulator_script = get_script('run-simulator.sh', context_dict)
         copy_script(s, run_simulator_script, 'run-simulator.sh')
