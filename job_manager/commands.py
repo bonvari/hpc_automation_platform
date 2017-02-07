@@ -52,6 +52,7 @@ def submit_job(job, hostname, username, password,model_name):
         # setting job-# directory and run, e.g. job-2/1
         run_dir = os.path.join(netlogo_dir, 'job-%s' % job.id, '%d' % job.latest_run)
         output_dir = os.path.join(run_dir, 'output')
+        error_dir = os.path.join(run_dir, 'error')
         model_filepath = os.path.join(run_dir, os.path.split(job.file_first.path)[1])
         experiment_filepath = os.path.join(run_dir, os.path.split(job.file_second.path)[1])
 
@@ -75,11 +76,24 @@ def submit_job(job, hostname, username, password,model_name):
         # create output dir
         s.sendline('mkdir -p %s' % output_dir)
 
+        # create error dir
+        s.sendline('mkdir -p %s' % error_dir)
+
+        simulator_name = 'run-simulator-%d-%d.sh' % (job.id, job.latest_run)
+
         # copy job submit script
         # copy sge script
         context_dict = {
             'experiment_name': job.experiment_name,
             'experiment_count': experiments_count,
+            'work_dir': run_dir,
+            'simulator_dir': run_dir,
+            'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
+            'simulator_src_dir': run_dir,
+            'output_dir': output_dir,
+            'model_name': model_name,
+            'error_dir': error_dir,
+            'simulator_name': simulator_name,
         }
 
         if experiments_count<10:
@@ -102,6 +116,8 @@ def submit_job(job, hostname, username, password,model_name):
             'simulator_src_dir': run_dir,
             'output_dir': output_dir,
             'model_name': model_name,
+            'error_dir': error_dir,
+            'simulator_name': simulator_name,
         }
         sge_script = get_script('sge-script2.sh', context_dict)
         copy_script(s, sge_script, 'sge-script2.sh')
@@ -114,9 +130,12 @@ def submit_job(job, hostname, username, password,model_name):
             'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),
             'output_dir': output_dir,
         }
+
+        s.sendline('cd %s/netlogo-5.2.1' % netlogo_dir )
+
         run_simulator_script = get_script('run-simulator.sh', context_dict)
-        copy_script(s, run_simulator_script, 'run-simulator.sh')
-        s.sendline('chmod +x run-simulator.sh')
+        copy_script(s, run_simulator_script, 'run-simulator-%d-%d.sh' % (job.id, job.latest_run))
+        s.sendline('chmod +x run-simulator-%d-%d.sh' % (job.id, job.latest_run) )
 
         copy_file(job.file_first.path, model_filepath, hostname, username, password)
 
@@ -126,6 +145,8 @@ def submit_job(job, hostname, username, password,model_name):
 
         #s.sendline('split_nlogo_experiment "%s" %s' % (model_filepath, job.experiment_name))
         #s.sendline('ls|grep %s|wc -l' % job.experiment_name)
+
+        s.sendline('cd %s' % run_dir)
 
         s.sendline('source ./job-submit.sh')
         s.logout()
