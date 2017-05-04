@@ -125,6 +125,7 @@ def submit_job(job, hostname, username, password,model_name):
 
         # copy run simulator script
         context_dict = {
+            'work_dir': run_dir,
             'model_file': model_filepath,
             'experiment_file': experiment_filepath,
             'netlogo_dir': os.path.join(netlogo_dir, 'netlogo-5.2.1'),

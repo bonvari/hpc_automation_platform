@@ -25,9 +25,9 @@ NETLOGO_DIR={{ netlogo_dir }}
 SIMULATOR_SRC_DIR= {{ simulator_src_dir }}
 
 
-echo work=\$WORK_DIR
-echo netlogo=\$NETLOGO_DIR
-echo error= {{ error_dir }}
+#echo work=\$WORK_DIR
+#echo netlogo=\$NETLOGO_DIR
+#echo error= {{ error_dir }}
 
 #SIMULATOR_SRC_DIR=/home/gtashakor/netlogo-sge2/
 # try to remove previous log files content

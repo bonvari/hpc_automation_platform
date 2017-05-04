@@ -217,7 +217,7 @@ def createScriptFile(script_fp,
 
                           
 #if __name__ == "__main__":
-def spliter(nlogo_filename, experiment_name, output_directory):
+def spliter(nlogo_filename, experiment_name, ):
 
     experiments_to_expand = []
     

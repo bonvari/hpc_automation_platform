@@ -1,4 +1,8 @@
 {% autoescape off %}
+
+
+start=\$(date +%s.%N)
+
 for ((i=0;i<10;i++))
 do
 qsub sge-script2.sh {{experiment_name}}000\$i.xml {{experiment_name}}000\$i.csv
