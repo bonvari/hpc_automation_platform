@@ -14,4 +14,4 @@ class JobForm(forms.ModelForm):
     class Meta:
         model = Job
         # fields = ['file_first', 'file_second', 'file_third', 'file_forth', 'email', 'hostname', 'username', 'password']
-        fields = ['file_first', 'file_second', 'experiment_name','model_name', 'email', 'hostname', 'username', 'password']
+        fields = ['file_first', 'file_second', 'experiment_name','model_name','cluster_number', 'email', 'hostname', 'username', 'password']

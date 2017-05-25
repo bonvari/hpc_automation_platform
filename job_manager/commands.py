@@ -34,7 +34,7 @@ def run_command(hostname, username, password):
 
 
 #executed when clicking the play button, the parameters are what passed from the interface to this function
-def submit_job(job, hostname, username, password,model_name):
+def submit_job(job, hostname, username, password,model_name,cluster_number):
     try:
 
         try:

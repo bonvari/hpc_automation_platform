@@ -10,6 +10,7 @@ class Job(models.Model):
     file_forth = models.FileField(upload_to='uploads/%Y_%m_%d/', blank=True)
     experiment_name = models.CharField(max_length=100)
     model_name = models.CharField(max_length=10)
+    cluster_number =  models.CharField(max_length=2)
     email = models.EmailField()
     hostname = models.CharField(max_length=100, default='aoclsb.uab.cat')
     username = models.CharField(max_length=100)

@@ -11,7 +11,9 @@
 #\$ -m e
 ####\$ -q cluster.q@clus1.hpc.local,cluster.q@clus3.hpc.local,cluster.q@clus4.hpc.local,cluster.q@clus5.hpc.local,cluster.q@clus7.hpc.local,cluster.q@clus8.hpc.local,cluster.q@clus9.hpc.local,cluster.q@clus10.hpc.local
 
-#\$ -q cluster.q@clus1.hpc.local,cluster.q@clus3.hpc.local,cluster.q@clus4.hpc.local,cluster.q@clus5.hpc.local,cluster.q@clus8.hpc.local,cluster.q@clus9.hpc.local
+#\$ -q cluster.q@clus{{cluster_number}}.hpc.local
+###
+#### ,cluster.q@clus3.hpc.local,cluster.q@clus4.hpc.local,cluster.q@clus5.hpc.local,cluster.q@clus8.hpc.local,cluster.q@clus9.hpc.local
 ####\$ -l excl
 #WORK_DIR=/home/gtashakor/netlogo-sge2/
 
